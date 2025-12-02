@@ -879,6 +879,7 @@ const MagicBento: React.FC<BentoProps> = ({
               className="magic-bento-card__header"
               style={{ marginBottom: '16px' }}
           >
+            <div className = "justify-between w-full flex items-center">
               <div 
                   className="magic-bento-card__label"
                   style={{
@@ -890,6 +891,18 @@ const MagicBento: React.FC<BentoProps> = ({
                   }}
               >
                   Most Recent Top 10 List
+              </div>
+
+              <div>
+                <p
+                 style={{
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#a0a0a0',
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase'
+                  }}>Total Hours Viewed: {predictionData['latest_data_context']['hours_viewed_sum']}</p>
+              </div>
               </div>
           </div>
           
