@@ -10,4 +10,6 @@ export default defineConfig({
       },
     }),
   ],
+  base:'/CS451-Final'
+
 })
