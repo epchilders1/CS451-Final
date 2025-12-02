@@ -29,6 +29,10 @@
     "vite": "^7.2.4"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/joy": "^5.0.0-beta.52",
+    "@mui/material": "^7.3.5",
     "gsap": "^3.13.0",
     "ldrs": "^1.1.9",
     "postprocessing": "^6.38.0",
@@ -36,6 +40,7 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6",
     "tailwind": "^4.0.0",
-    "three": "^0.181.2"
+    "three": "^0.181.2",
+    "use-count-up": "^3.0.1"
   }
 }

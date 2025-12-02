@@ -128,5 +128,77 @@
       "cv_auc_mean": 0.6595527805527805,
       "cv_auc_std": 0.08862601769147552
     }
-  }
+  },
+  "recent_top_10_movies": [
+    {
+      "week": "2025-11-23",
+      "title": "Champagne Problems",
+      "ranking": 1,
+      "weeks_in_top10": 1,
+      "hours_viewed": 33800000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "In Your Dreams",
+      "ranking": 2,
+      "weeks_in_top10": 2,
+      "hours_viewed": 25200000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "Frankenstein",
+      "ranking": 3,
+      "weeks_in_top10": 3,
+      "hours_viewed": 37000000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "The Carman Family Deaths",
+      "ranking": 4,
+      "weeks_in_top10": 1,
+      "hours_viewed": 15400000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "KPop Demon Hunters",
+      "ranking": 5,
+      "weeks_in_top10": 23,
+      "hours_viewed": 16900000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "A Merry Little Ex-Mas",
+      "ranking": 6,
+      "weeks_in_top10": 2,
+      "hours_viewed": 13700000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "Train Dreams",
+      "ranking": 7,
+      "weeks_in_top10": 1,
+      "hours_viewed": 10700000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "Selena y Los Dinos: A Family\u2019s Legacy",
+      "ranking": 8,
+      "weeks_in_top10": 1,
+      "hours_viewed": 9300000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "The Little Things",
+      "ranking": 9,
+      "weeks_in_top10": 4,
+      "hours_viewed": 10100000
+    },
+    {
+      "week": "2025-11-23",
+      "title": "A Man Called Otto",
+      "ranking": 10,
+      "weeks_in_top10": 5,
+      "hours_viewed": 9600000
+    }
+  ]
 }

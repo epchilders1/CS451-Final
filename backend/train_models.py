@@ -4,11 +4,9 @@ from pathlib import Path
 import logging
 import json
 from typing import Dict, Tuple
-import seaborn as sns
 from datetime import datetime
-import joblib # Import joblib for saving models
-
-# ML Libraries
+import joblib 
+from sklearn.base import clone
 from sklearn.model_selection import TimeSeriesSplit, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -41,8 +39,8 @@ class NetflixEngagementPredictor:
         self.scaler = StandardScaler()
         self.feature_importance = {}
         
-    def load_data(self) -> pd.DataFrame:
-        """Load weekly features dataset"""
+    def load_data(self) -> tuple[pd.DataFrame, pd.DataFrame]:
+        """Load weekly features dataset and most recent top 10 movies"""
         logger.info("Loading weekly features dataset...")
         
         df = pd.read_csv(self.data_dir / "weekly_features.csv")
@@ -52,13 +50,24 @@ class NetflixEngagementPredictor:
         logger.info(f"  Date range: {df['week'].min()} to {df['week'].max()}")
         logger.info(f"  Target distribution: {df['engagement_decline'].value_counts().to_dict()}")
         
-        return df
+        logger.info("Loading most recent top 10 movies...")
+        top10_df = pd.read_csv(self.data_dir / "netflix_top10_raw.csv")
+        top10_df['week'] = pd.to_datetime(top10_df['week'])
+        
+        most_recent_week = top10_df['week'].max()
+        recent_top10 = top10_df[top10_df['week'] == most_recent_week].copy()
+        
+        recent_top10 = recent_top10.sort_values('ranking')
+        
+        logger.info(f"✓ Loaded top 10 movies for week: {most_recent_week.date()}")
+        logger.info(f"  Movies: {', '.join(recent_top10['title'].tolist()[:3])}...")
+        
+        return df, recent_top10
     
     def prepare_features(self, df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series, list]:
         """Prepare features for modeling"""
         logger.info("Preparing features...")
         
-        # Define feature columns
         feature_cols = [
             # Current week engagement
             'hours_viewed_sum',
@@ -95,14 +104,11 @@ class NetflixEngagementPredictor:
             'week_of_year'
         ]
         
-        # Filter to only existing columns
         available_features = [col for col in feature_cols if col in df.columns]
         logger.info(f"Using {len(available_features)} features")
         
-        # Remove rows with NaN in target
         df_clean = df[df['engagement_decline'].notna()].copy()
         
-        # Fill NaN in features (forward fill for lagged features)
         X = df_clean[available_features].fillna(method='ffill').fillna(0)
         y = df_clean['engagement_decline']
         
@@ -142,7 +148,7 @@ class NetflixEngagementPredictor:
             'model': lr,
             'cv_auc_mean': lr_scores.mean(),
             'cv_auc_std': lr_scores.std(),
-            'cv_scores': lr_scores.tolist() # Convert numpy array to list for better JSON handling later
+            'cv_scores': lr_scores.tolist() 
         }
         
         self.models['logistic_regression'] = lr
@@ -188,7 +194,7 @@ class NetflixEngagementPredictor:
             max_depth=6,
             learning_rate=0.1,
             random_state=42,
-            scale_pos_weight=(y == 0).sum() / (y == 1).sum(),  # Handle class imbalance
+            scale_pos_weight=(y == 0).sum() / (y == 1).sum(),
             eval_metric='auc'
         )
         xgb_scores = cross_val_score(xgb_model, X, y, cv=tscv, scoring='roc_auc')
@@ -258,7 +264,8 @@ class NetflixEngagementPredictor:
         
         for model_name, model in self.models.items():
             logger.info(f"\n{model_name.upper()}:")
-            
+            model_clone = clone(model)
+            model_clone.fit(X_train, y_train)
             # Make predictions
             y_pred = model.predict(X_test)
             y_pred_proba = model.predict_proba(X_test)[:, 1]
@@ -424,17 +431,20 @@ def main():
     )
     
     # Step 1: Load data
-    df = predictor.load_data()
+    df, top_10 = predictor.load_data()
     
     # Step 2: Prepare features
     X, y, feature_names = predictor.prepare_features(df)
-    
+    test_size = min(25, len(X) // 5)
+
+    X_train, X_test = X.iloc[:-test_size], X.iloc[-test_size:]
+    y_train, y_test = y.iloc[:-test_size], y.iloc[-test_size:]
     # Step 3: Train models
     # This dictionary (training_results) contains unserializable model objects
     training_results = predictor.train_baseline_models(X, y, feature_names)
     
     # Step 4: Evaluate on test set
-    test_results = predictor.evaluate_on_test_set(X, y, test_size=10)
+    test_results = predictor.evaluate_on_test_set(X, y, test_size=test_size)
     
     # Step 5: Generate insights
     insights = predictor.generate_insights(X, y)
@@ -467,20 +477,23 @@ def main():
     
     # --- Context Data ---
     latest_features_context = {
-        # FIX for indexing: X.index[-1] is the index, which is the datetime object
         'date': X.index[-1].strftime('%Y-%m-%d') if isinstance(X.index, pd.DatetimeIndex) else 'N/A',
         'hours_viewed_sum': float(last_week_features.get('hours_viewed_sum', 0)),
         'sentiment_lag_2': float(last_week_features.get('sentiment_lag_2', 0))
     }
 
-    # --- Final API Payload ---
+    top_10_serializable = top_10.copy()
+    top_10_serializable['week'] = top_10_serializable['week'].dt.strftime('%Y-%m-%d')
+
+
     api_payload = {
         'status': 'success',
         'prediction_date': datetime.now().strftime('%Y-%m-%d'),
         'ensemble_prediction': prediction['ensemble'],
         'top_predictive_features': serializable_feature_importance,
         'latest_data_context': latest_features_context,
-        'model_performance_summary': serializable_training_results 
+        'model_performance_summary': serializable_training_results,
+        'recent_top_10_movies': top_10_serializable.to_dict('records')
     }
 
     # --- FIX: Access model_dir via the predictor object ---

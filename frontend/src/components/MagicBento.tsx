@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { gsap } from 'gsap';
+import CircularProgressBar from './CircularProgressBar';
 
 // Types
 interface BentoCardProps {
@@ -21,21 +22,13 @@ interface BentoProps {
   glowColor?: string;
   clickEffect?: boolean;
   enableMagnetism?: boolean;
+  predictionData?: any;
 }
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
 const DEFAULT_GLOW_COLOR = '132, 0, 255';
 const MOBILE_BREAKPOINT = 768;
-
-const cardData: BentoCardProps[] = [
-  { color: '#060010', title: 'Analytics', description: 'Track user behavior', label: 'Insights' },
-  { color: '#060010', title: 'Dashboard', description: 'Centralized data view', label: 'Overview' },
-  { color: '#060010', title: 'Collaboration', description: 'Work together seamlessly', label: 'Teamwork' },
-  { color: '#060010', title: 'Automation', description: 'Streamline workflows', label: 'Efficiency' },
-  { color: '#060010', title: 'Integration', description: 'Connect favorite tools', label: 'Connectivity' },
-  { color: '#060010', title: 'Security', description: 'Enterprise-grade protection', label: 'Protection' }
-];
 
 // Inline styles object
 const styles = `
@@ -508,6 +501,35 @@ const ParticleCard: React.FC<{
     </div>
   );
 };
+const getMedalColor = (index: number) => {
+  switch (index) {
+    case 0:
+      return '#FFD700'; 
+    case 1:
+      return '#C0C0C0'; 
+    case 2: 
+      return '#CD7F32';
+    default:
+      return '#e0e0e0'; 
+  }
+};
+
+
+const findBestModel = (data: { [model: string]: any }) => {
+    let bestModel: string | null = null;
+    let maxAuc = -1;
+    for (const [model, metrics] of Object.entries(data)) {
+        if (metrics.cv_auc_mean > maxAuc) {
+            maxAuc = metrics.cv_auc_mean;
+            bestModel = model;
+        }
+    }
+    return bestModel;
+};
+
+const formatAuc = (value:any) => value.toFixed(3);
+
+const formatStd = (value:any) => `±${value.toFixed(3)}`;
 
 const GlobalSpotlight: React.FC<{
   gridRef: React.RefObject<HTMLDivElement | null>;
@@ -655,11 +677,31 @@ const MagicBento: React.FC<BentoProps> = ({
   enableTilt = false,
   glowColor = DEFAULT_GLOW_COLOR,
   clickEffect = true,
-  enableMagnetism = true
+  enableMagnetism = true,
+  predictionData = null
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobileDetection();
   const shouldDisableAnimations = disableAnimations || isMobile;
+
+  const baseClassName = `magic-bento-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''} ${enableBorderGlow ? 'magic-bento-card--border-glow' : ''}`;
+
+  const CardWrapper = enableStars ? ParticleCard : 'div';
+  const cardWrapperProps = enableStars ? {
+    disableAnimations: shouldDisableAnimations,
+    particleCount,
+    glowColor,
+    enableTilt,
+    clickEffect,
+    enableMagnetism
+  } : {};
+
+  const prediction = predictionData['ensemble_prediction']
+  const top10_movies = predictionData['recent_top_10_movies'];
+  const top_predictive_features = predictionData['top_predictive_features']['xgboost'] || [];
+  const prediction_date = predictionData['prediction_date'];
+  const prediction_status = predictionData['status'];
+  const model_performance_summary = predictionData['model_performance_summary'];
 
   return (
     <div className="bento-container">
@@ -676,50 +718,445 @@ const MagicBento: React.FC<BentoProps> = ({
       )}
 
       <div className="card-grid bento-section" ref={gridRef}>
-        {cardData.map((card, index) => {
-          const baseClassName = `magic-bento-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''} ${enableBorderGlow ? 'magic-bento-card--border-glow' : ''}`;
-          const cardProps = {
-            className: baseClassName,
-            style: {
-              backgroundColor: card.color
-            } as React.CSSProperties
-          };
+        <CardWrapper
+          className={baseClassName}
+          style={{ backgroundColor: '#060010' }}
+          {...cardWrapperProps}
+        >
+          <div className="magic-bento-card__header">
+            <div className="magic-bento-card__label">Engagement Decline Probability</div>
+          </div>
+          <div className="flex justify-center items-center magic-bento-card__content">
+          <CircularProgressBar
+            desiredValue={prediction.decline_probability * 100}
+            loading={true}
+            activeTab={true}
+            ratingView={false}
+          />
+          </div>
+        </CardWrapper>
 
-          if (enableStars) {
-            return (
-              <ParticleCard
-                key={index}
-                {...cardProps}
-                disableAnimations={shouldDisableAnimations}
-                particleCount={particleCount}
-                glowColor={glowColor}
-                enableTilt={enableTilt}
-                clickEffect={clickEffect}
-                enableMagnetism={enableMagnetism}
-              >
-                <div className="magic-bento-card__header">
-                  <div className="magic-bento-card__label">{card.label}</div>
+       <CardWrapper
+            className={baseClassName}
+            style={{
+                backgroundColor: '#060010',
+                borderRadius: '12px',
+                padding: '24px',
+                color: '#fff',
+            }}
+            {...cardWrapperProps}
+        >
+            <div 
+                className="magic-bento-card__header"
+                style={{ marginBottom: '16px' }}
+            >
+                <div className="magic-bento-card__label">
+                    Prediction
                 </div>
-                <div className="magic-bento-card__content">
-                  <h2 className="magic-bento-card__title">{card.title}</h2>
-                  <p className="magic-bento-card__description">{card.description}</p>
-                </div>
-              </ParticleCard>
-            );
-          }
-
-          return (
-            <div key={index} {...cardProps}>
-              <div className="magic-bento-card__header">
-                <div className="magic-bento-card__label">{card.label}</div>
-              </div>
-              <div className="magic-bento-card__content">
-                <h2 className="magic-bento-card__title">{card.title}</h2>
-                <p className="magic-bento-card__description">{card.description}</p>
-              </div>
             </div>
-          );
-        })}
+            
+            <div className="magic-bento-card__content">
+                <h2 
+                    className="magic-bento-card__title"
+                    style={{
+                        fontSize: '40px', 
+                        fontWeight: '700',
+                        lineHeight: '1.1',
+                        margin: '0',
+                        color: '#fff',
+                    }}
+                >
+                    {prediction.prediction}
+                </h2>
+                <p 
+                    className="magic-bento-card__description"
+                    style={{
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: '#e0e0e0',
+                        marginTop: '12px'
+                    }}
+                >
+                    There is a 
+                    <span 
+                        style={{
+                            fontWeight: '600',
+                            color: prediction.risk_level.toLowerCase() === 'low' ? '#8cff8c' : 
+                                  prediction.risk_level.toLowerCase() === 'medium' ? '#ffcc00' : 
+                                  '#ff4d4d', 
+                            margin: '0 4px',
+                        }}
+                    >
+                        {prediction.risk_level}
+                    </span> 
+                    chance that viewer engagement drops next week.
+                </p>
+                <p 
+                    style={{
+                        fontSize: '11px',
+                        fontWeight: '400',
+                        color: '#a0a0a0',
+                        margin: '8px 0 0 0', 
+                        padding: '0',
+                    }}
+                > 
+                    {'>10% decline in hours viewed'}
+                </p>            
+                </div>
+          </CardWrapper>
+
+        <CardWrapper
+          className={baseClassName}
+          style={{ backgroundColor: '#060010' }}
+          {...cardWrapperProps}
+        >
+          <div className="magic-bento-card__header">
+            <div className="magic-bento-card__label">Top Predictive Features</div>
+          </div>
+          {top_predictive_features && top_predictive_features.length > 0 ? (
+              <>
+                  <div style={{ listStyle: 'none', padding: '0', margin: '0', overflow: 'auto' }} className="overflow-y-auto max-h-64">
+                      {top_predictive_features.map((feature: any, index: number) => (
+                          <div 
+                              className="flex flex-row"
+                              key={index}
+                              style={{
+                                  display: 'flex', 
+                                  alignItems: 'baseline',
+                                  marginBottom: '8px',
+                              }}
+                          >
+                              <div
+                                  style={{
+                                      fontSize: index < 3 ? '32px' : '20px',
+                                      fontWeight: '700',
+                                      width: '30px', 
+                                      textAlign: 'right',
+                                      marginRight: '12px',
+                                      color: getMedalColor(index),
+                                      textShadow: index < 3 ? '0 0 4px rgba(255, 255, 255, 0.4)' : 'none', 
+                                  }}
+                              >
+                                  {index + 1}.
+                              </div>
+                              
+                              <p 
+                                  style={{
+                                      margin: '0',
+                                      fontSize: '16px',
+                                      color: '#e0e0e0',
+                                  }}
+                              >
+                                  <strong style={{ color: '#fff' }}>
+                                      {feature.feature}
+                                  </strong> 
+                                  &nbsp;
+                                  <span style={{ color: '#a0a0a0', fontSize: '14px' }}>
+                                      ({feature.importance})
+                                  </span>
+                              </p>
+                          </div>
+                      ))}
+                  </div>
+              </>
+          ) : (
+              <p style={{ color: '#e0e0e0' }}>No data available</p>
+          )}
+        </CardWrapper>
+
+       <CardWrapper
+          className={baseClassName}
+          // Set the overall card styles
+          style={{
+              backgroundColor: '#060010',
+              borderRadius: '12px',
+              padding: '24px',
+              color: '#fff',
+          }}
+          {...cardWrapperProps}
+      >
+          <div 
+              className="magic-bento-card__header"
+              style={{ marginBottom: '16px' }}
+          >
+              <div 
+                  className="magic-bento-card__label"
+                  style={{
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#a0a0a0',
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase'
+                  }}
+              >
+                  Most Recent Top 10 List
+              </div>
+          </div>
+          
+          {top10_movies && top10_movies.length > 0 ? (
+              <>
+                  <div style={{ listStyle: 'none', padding: '0', margin: '0', overflow: 'auto' }} className="overflow-y-auto max-h-64">
+                      {top10_movies.map((movie: any, index: number) => (
+                          <div 
+                              className="flex flex-row"
+                              key={index}
+                              style={{
+                                  display: 'flex', 
+                                  alignItems: 'baseline',
+                                  marginBottom: '8px',
+                              }}
+                          >
+                              <div
+                                  style={{
+                                      fontSize: index < 3 ? '32px' : '20px',
+                                      fontWeight: '700',
+                                      width: '30px', 
+                                      textAlign: 'right',
+                                      marginRight: '12px',
+                                      color: getMedalColor(index),
+                                      textShadow: index < 3 ? '0 0 4px rgba(255, 255, 255, 0.4)' : 'none', 
+                                  }}
+                              >
+                                  {movie.ranking}.
+                              </div>
+                              
+                              <p 
+                                  style={{
+                                      margin: '0',
+                                      fontSize: '16px',
+                                      color: '#e0e0e0',
+                                  }}
+                              >
+                                  <strong style={{ color: '#fff' }}>
+                                      {movie.title}
+                                  </strong> 
+                                  &nbsp;
+                                  <span style={{ color: '#a0a0a0', fontSize: '14px' }}>
+                                      ({movie.hours_viewed} hours viewed)
+                                  </span>
+                              </p>
+                          </div>
+                      ))}
+                  </div>
+              </>
+          ) : (
+              <p style={{ color: '#e0e0e0' }}>No data available</p>
+          )}
+      </CardWrapper>
+
+       <CardWrapper
+            className={baseClassName}
+            style={{
+                backgroundColor: '#060010',
+                borderRadius: '12px',
+                padding: '24px',
+                color: '#fff',
+            }}
+            {...cardWrapperProps}
+        >
+            <div 
+                className="magic-bento-card__header"
+                style={{ marginBottom: '16px' }}
+            >
+                <div 
+                    className="magic-bento-card__label"
+                    style={{
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        color: '#a0a0a0', 
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase'
+                    }}
+                >
+                    Prediction Info
+                </div>
+            </div>
+            
+            <div 
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: '1px solid #1a1a3a',
+                }}
+            >
+                <p 
+                    style={{
+                        margin: '0',
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: '#a0a0a0', 
+                    }}
+                >
+                    Prediction Date:
+                </p>
+                <p 
+                    style={{
+                        margin: '0',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: '#fff',
+                    }}
+                >
+                    {prediction_date}
+                </p>
+            </div>
+
+            <div 
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                }}
+            >
+                <p 
+                    style={{
+                        margin: '0',
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: '#a0a0a0',
+                    }}
+                >
+                    Status:
+                </p>
+                <p 
+                    style={{
+                        margin: '0',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: '#A855F7', 
+                        backgroundColor: 'rgba(168, 85, 247, 0.15)',
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                    }}
+                >
+                    {prediction_status}
+                </p>
+            </div>
+
+        </CardWrapper>
+
+       <CardWrapper
+            className={baseClassName}
+            style={{
+                backgroundColor: '#060010',
+                borderRadius: '12px',
+                padding: '24px',
+                color: '#fff',
+            }}
+            {...cardWrapperProps}
+        >
+            <div 
+                className="magic-bento-card__header"
+                style={{ marginBottom: '16px' }}
+            >
+                <div 
+                    className="magic-bento-card__label"
+                    style={{
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        color: '#a0a0a0',
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase'
+                    }}
+                >
+                    Model Performance Summary
+                </div>
+            </div>
+            
+            <div 
+                className="magic-bento-card__content"
+                style={{ marginTop: '10px',
+                        overflow:'auto'
+                }}
+                
+            >
+                <div 
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '0 0 8px 0',
+                        borderBottom: '1px solid #1a1a3a',
+                    }}
+                >
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#a0a0a0', width: '40%' }}>Model</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#a0a0a0', width: '30%', textAlign: 'right' }}>CV AUC Mean</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#a0a0a0', width: '30%', textAlign: 'right' }}>Std Dev</span>
+                </div>
+
+                {Object.entries(model_performance_summary).map(([modelName, metrics], index) => {
+                    const isBest = modelName === findBestModel(model_performance_summary);
+                    const highlightColor = '#A855F7';
+                    const baseTextColor = '#e0e0e0';
+
+                    return (
+                        <div 
+                            key={modelName}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: '12px 0',
+                                borderBottom: index < Object.keys(model_performance_summary).length - 1 ? '1px solid #0f0f20' : 'none',
+                                backgroundColor: isBest ? 'rgba(168, 85, 247, 0.05)' : 'transparent',
+                                borderRadius: isBest ? '4px' : '0',
+                            }}
+                        >
+                            <span 
+                                style={{
+                                    fontSize: '16px',
+                                    fontWeight: isBest ? '700' : '600',
+                                    color: isBest ? highlightColor : baseTextColor,
+                                    width: '40%',
+                                    textTransform: 'capitalize',
+                                }}
+                            >
+                                {modelName.replace('_', ' ')} 
+                                {isBest && 
+                                    <span style={{ 
+                                        fontSize: '10px', 
+                                        marginLeft: '6px',
+                                        padding: '2px 6px',
+                                        borderRadius: '4px',
+                                        backgroundColor: highlightColor,
+                                        color: '#060010', 
+                                        fontWeight: '900',
+                                    }}>
+                                        BEST
+                                    </span>
+                                }
+                            </span>
+                            
+                            <span 
+                                style={{
+                                    fontSize: '16px',
+                                    fontWeight: isBest ? '700' : '500',
+                                    color: isBest ? highlightColor : baseTextColor,
+                                    width: '30%',
+                                    textAlign: 'right',
+                                }}
+                            >
+                                {formatAuc((metrics as {cv_auc_mean: number}).cv_auc_mean)}
+                            </span>
+                            
+                            <span 
+                                style={{
+                                    fontSize: '16px',
+                                    fontWeight: '400',
+                                    color: '#a0a0a0', 
+                                    width: '30%',
+                                    textAlign: 'right',
+                                }}
+                            >
+                                {formatStd((metrics as { cv_auc_std: number }).cv_auc_std)}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        </CardWrapper>
       </div>
     </div>
   );

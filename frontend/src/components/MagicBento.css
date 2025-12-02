@@ -60,6 +60,7 @@
 
 .magic-bento-card__content {
   flex-direction: column;
+  text-align: center;
 }
 
 .magic-bento-card__label {

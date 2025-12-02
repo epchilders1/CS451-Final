@@ -48,47 +48,67 @@ export default function HomePage() {
             width: '100vw', 
             height: '100vh', 
             position: 'relative',
-            overflow: 'hidden',
-            background: 'radial-gradient(ellipse at top, #1a0b2e 0%, #0a0014 50%, #000000 100%)'
+            overflow: 'auto',
+            background: 'radial-gradient(ellipse at top, #1a0b2e 0%, #0a0014 50%, #000000 100%)',
+            zIndex: 0
         }}>
-            <div style={{
-                position: 'absolute',
+                <div style={{
+                position: "fixed",
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 0
-            }}>
+                width: "100vw",
+                height: "100vh",
+                zIndex: -1,
+                pointerEvents: "none"
+                }}>
+
                 <PixelBlast
-                    variant="circle"
-                    pixelSize={6}
-                    color="#B19EEF"
-                    patternScale={3}
-                    patternDensity={1.4}
-                    pixelSizeJitter={0.5}
-                    enableRipples
-                    rippleSpeed={0.6}
-                    rippleThickness={0.12}
-                    rippleIntensityScale={1.5}
-                    liquid
-                    liquidStrength={0.12}
-                    liquidRadius={1.2}
-                    liquidWobbleSpeed={5}
-                    speed={1.5}
-                    edgeFade={0.25}
-                    transparent
+                    pixelSize={4}
+                    patternDensity={1}
+                    edgeFade={0}
+                    pixelSizeJitter={0}
+                    noiseAmount={0.4}
                 />
             </div>
-
-            <div style={{
+              <div style={{
                 position: 'relative',
                 zIndex: 10,
                 width: '100%',
-                height: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                overflow: 'auto',
+                flexDirection: 'column',
+                padding: '30px 20px 40px 20px', 
+                color: '#fff',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)', 
             }}>
+                <h1 
+                    style={{
+                        fontSize: '48px',
+                        fontWeight: '800',
+                        margin: '0',
+                    }}
+                >
+                    Netflix Engagement Predictor
+                </h1>
+                <p 
+                    style={{
+                        fontSize: '18px',
+                        fontWeight: '400',
+                        color: '#e0e0e0',
+                        maxWidth: '700px', 
+                        textAlign: 'center',
+                        marginTop: '10px',
+                        marginBottom: '0',
+                        lineHeight: '1.4',
+                        overflowWrap: 'break-word',
+                        overflow: 'auto'
+                    }}
+                >
+                    This dashboard automatically updates every week and predicts whether or not the following week will see a downturn in user engagement
+                </p>
+
                 <MagicBento 
                     textAutoHide={true}
                     enableStars={true}
@@ -100,6 +120,7 @@ export default function HomePage() {
                     spotlightRadius={300}
                     particleCount={12}
                     glowColor="132, 0, 255"
+                    predictionData={predictionData}
                 />
             </div>
         </div>
