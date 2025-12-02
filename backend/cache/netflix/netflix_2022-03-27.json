@@ -1,0 +1,72 @@
+[
+  {
+    "week": "2022-03-27",
+    "title": "The Adam Project",
+    "ranking": "01",
+    "weeks_in_top10": "8",
+    "hours_viewed": "31,700,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "Rescued by Ruby",
+    "ranking": "02",
+    "weeks_in_top10": "3",
+    "hours_viewed": "17,030,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "Gemini Man",
+    "ranking": "03",
+    "weeks_in_top10": "7",
+    "hours_viewed": "16,450,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "Windfall",
+    "ranking": "04",
+    "weeks_in_top10": "2",
+    "hours_viewed": "15,490,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "John Wick: Chapter 2",
+    "ranking": "05",
+    "weeks_in_top10": "1",
+    "hours_viewed": "7,800,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "The Dead Don't Die",
+    "ranking": "06",
+    "weeks_in_top10": "2",
+    "hours_viewed": "7,570,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "6 Underground",
+    "ranking": "07",
+    "weeks_in_top10": "3",
+    "hours_viewed": "7,440,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "A Walk Among the Tombstones",
+    "ranking": "08",
+    "weeks_in_top10": "2",
+    "hours_viewed": "6,740,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "Shrek",
+    "ranking": "09",
+    "weeks_in_top10": "15",
+    "hours_viewed": "6,350,000"
+  },
+  {
+    "week": "2022-03-27",
+    "title": "Despicable Me 2",
+    "ranking": "10",
+    "weeks_in_top10": "19",
+    "hours_viewed": "5,750,000"
+  }
+]

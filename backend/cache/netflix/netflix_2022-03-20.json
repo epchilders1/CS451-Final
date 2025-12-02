@@ -1,0 +1,72 @@
+[
+  {
+    "week": "2022-03-20",
+    "title": "The Adam Project",
+    "ranking": "01",
+    "weeks_in_top10": "8",
+    "hours_viewed": "85,360,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "Rescued by Ruby",
+    "ranking": "02",
+    "weeks_in_top10": "3",
+    "hours_viewed": "19,940,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "Gemini Man",
+    "ranking": "03",
+    "weeks_in_top10": "7",
+    "hours_viewed": "11,840,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "The Ice Road",
+    "ranking": "04",
+    "weeks_in_top10": "2",
+    "hours_viewed": "11,650,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "The Weekend Away",
+    "ranking": "05",
+    "weeks_in_top10": "3",
+    "hours_viewed": "9,240,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "A Walk Among the Tombstones",
+    "ranking": "06",
+    "weeks_in_top10": "2",
+    "hours_viewed": "9,030,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "Windfall",
+    "ranking": "07",
+    "weeks_in_top10": "2",
+    "hours_viewed": "8,360,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "Shrek",
+    "ranking": "08",
+    "weeks_in_top10": "15",
+    "hours_viewed": "7,870,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "Shrek 2",
+    "ranking": "09",
+    "weeks_in_top10": "7",
+    "hours_viewed": "6,750,000"
+  },
+  {
+    "week": "2022-03-20",
+    "title": "A Madea Homecoming",
+    "ranking": "10",
+    "weeks_in_top10": "5",
+    "hours_viewed": "5,790,000"
+  }
+]

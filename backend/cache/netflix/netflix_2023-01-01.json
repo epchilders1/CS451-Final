@@ -1,0 +1,72 @@
+[
+  {
+    "week": "2023-01-01",
+    "title": "Glass Onion: A Knives Out Mystery",
+    "ranking": "01",
+    "weeks_in_top10": "7",
+    "hours_viewed": "127,250,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "Roald Dahl's Matilda The Musical",
+    "ranking": "02",
+    "weeks_in_top10": "6",
+    "hours_viewed": "41,060,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "Knives Out",
+    "ranking": "03",
+    "weeks_in_top10": "2",
+    "hours_viewed": "16,760,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "White Noise",
+    "ranking": "04",
+    "weeks_in_top10": "2",
+    "hours_viewed": "14,750,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "The Invitation",
+    "ranking": "05",
+    "weeks_in_top10": "1",
+    "hours_viewed": "12,200,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "Guillermo del Toro\u2019s Pinocchio",
+    "ranking": "06",
+    "weeks_in_top10": "4",
+    "hours_viewed": "10,910,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "Trolls",
+    "ranking": "07",
+    "weeks_in_top10": "7",
+    "hours_viewed": "9,980,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "After Ever Happy",
+    "ranking": "08",
+    "weeks_in_top10": "1",
+    "hours_viewed": "7,220,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "How the Grinch Stole Christmas",
+    "ranking": "09",
+    "weeks_in_top10": "7",
+    "hours_viewed": "7,190,000"
+  },
+  {
+    "week": "2023-01-01",
+    "title": "Bullet Train",
+    "ranking": "10",
+    "weeks_in_top10": "5",
+    "hours_viewed": "6,940,000"
+  }
+]

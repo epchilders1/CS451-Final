@@ -1,0 +1,72 @@
+[
+  {
+    "week": "2023-10-01",
+    "title": "Reptile",
+    "ranking": "01",
+    "weeks_in_top10": "5",
+    "hours_viewed": "40,200,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "Love is in the Air",
+    "ranking": "02",
+    "weeks_in_top10": "2",
+    "hours_viewed": "17,300,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "The Black Book",
+    "ranking": "03",
+    "weeks_in_top10": "3",
+    "hours_viewed": "23,100,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "Spy Kids: Armageddon",
+    "ranking": "04",
+    "weeks_in_top10": "3",
+    "hours_viewed": "14,700,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "The Croods: A New Age",
+    "ranking": "05",
+    "weeks_in_top10": "2",
+    "hours_viewed": "14,100,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "Love at First Sight",
+    "ranking": "06",
+    "weeks_in_top10": "3",
+    "hours_viewed": "11,400,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "Accused",
+    "ranking": "07",
+    "weeks_in_top10": "1",
+    "hours_viewed": "4,900,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "The Machine",
+    "ranking": "08",
+    "weeks_in_top10": "1",
+    "hours_viewed": "5,700,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "In Time",
+    "ranking": "09",
+    "weeks_in_top10": "3",
+    "hours_viewed": "5,400,000"
+  },
+  {
+    "week": "2023-10-01",
+    "title": "Force of Nature",
+    "ranking": "10",
+    "weeks_in_top10": "1",
+    "hours_viewed": "4,500,000"
+  }
+]

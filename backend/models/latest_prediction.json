@@ -1,0 +1,132 @@
+{
+  "status": "success",
+  "prediction_date": "2025-12-02",
+  "ensemble_prediction": {
+    "decline_probability": 0.22602170476990152,
+    "prediction": "NO DECLINE",
+    "risk_level": "LOW"
+  },
+  "top_predictive_features": {
+    "xgboost": [
+      {
+        "feature": "hours_viewed_sum",
+        "importance": 0.06907428801059723
+      },
+      {
+        "feature": "weeks_in_top10_mean",
+        "importance": 0.06787760555744171
+      },
+      {
+        "feature": "hours_lag_1",
+        "importance": 0.0625801831483841
+      },
+      {
+        "feature": "hours_viewed_std",
+        "importance": 0.060773734003305435
+      },
+      {
+        "feature": "month",
+        "importance": 0.058807965368032455
+      },
+      {
+        "feature": "sentiment_lag_1",
+        "importance": 0.057308439165353775
+      },
+      {
+        "feature": "week_of_year",
+        "importance": 0.05023052170872688
+      },
+      {
+        "feature": "vader_negative_mean_mean",
+        "importance": 0.0502004474401474
+      },
+      {
+        "feature": "num_reviews_with_text_sum",
+        "importance": 0.04440999776124954
+      },
+      {
+        "feature": "vader_compound_mean_mean",
+        "importance": 0.04417734593153
+      },
+      {
+        "feature": "sentiment_lag_4",
+        "importance": 0.04349246248602867
+      },
+      {
+        "feature": "vader_positive_mean_mean",
+        "importance": 0.042910583317279816
+      },
+      {
+        "feature": "rating_std_mean",
+        "importance": 0.04064565896987915
+      },
+      {
+        "feature": "sentiment_lag_2",
+        "importance": 0.03968023136258125
+      },
+      {
+        "feature": "hours_ma_4week",
+        "importance": 0.03966395929455757
+      },
+      {
+        "feature": "hours_lag_4",
+        "importance": 0.0386471189558506
+      },
+      {
+        "feature": "sentiment_ma_4week",
+        "importance": 0.03843091055750847
+      },
+      {
+        "feature": "hours_lag_2",
+        "importance": 0.037205714732408524
+      },
+      {
+        "feature": "avg_rating_mean",
+        "importance": 0.03385990113019943
+      },
+      {
+        "feature": "hours_lag_3",
+        "importance": 0.03118165209889412
+      },
+      {
+        "feature": "sentiment_lag_3",
+        "importance": 0.029706452041864395
+      },
+      {
+        "feature": "textblob_polarity_mean_mean",
+        "importance": 0.01913481578230858
+      },
+      {
+        "feature": "ranking_nunique",
+        "importance": 0.0
+      },
+      {
+        "feature": "hours_viewed_mean",
+        "importance": 0.0
+      }
+    ]
+  },
+  "latest_data_context": {
+    "date": "N/A",
+    "hours_viewed_sum": 181700000.0,
+    "sentiment_lag_2": 0.2993015
+  },
+  "model_performance_summary": {
+    "logistic_regression": {
+      "cv_auc_mean": 0.6207919580419581,
+      "cv_auc_std": 0.036498167480367
+    },
+    "random_forest": {
+      "cv_auc_mean": 0.6313734182484183,
+      "cv_auc_std": 0.11572680243685228
+    },
+    "xgboost": {
+      "cv_auc_mean": 0.6292572427572428,
+      "cv_auc_std": 0.06571814360454759
+    },
+    "lightgbm": {
+      "cv_auc_mean": 0.6595527805527805,
+      "cv_auc_std": 0.08862601769147552
+    }
+  }
+}

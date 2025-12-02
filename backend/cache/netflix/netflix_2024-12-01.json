@@ -1,0 +1,72 @@
+[
+  {
+    "week": "2024-12-01",
+    "title": "Our Little Secret",
+    "ranking": "01",
+    "weeks_in_top10": "5",
+    "hours_viewed": "54,600,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Spellbound",
+    "ranking": "02",
+    "weeks_in_top10": "3",
+    "hours_viewed": "28,000,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "The Merry Gentlemen",
+    "ranking": "03",
+    "weeks_in_top10": "2",
+    "hours_viewed": "14,400,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Madagascar: Escape 2 Africa",
+    "ranking": "04",
+    "weeks_in_top10": "2",
+    "hours_viewed": "9,200,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Daddy's Home 2",
+    "ranking": "05",
+    "weeks_in_top10": "1",
+    "hours_viewed": "9,000,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "The Hunt",
+    "ranking": "06",
+    "weeks_in_top10": "2",
+    "hours_viewed": "7,800,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Hot Frosty",
+    "ranking": "07",
+    "weeks_in_top10": "3",
+    "hours_viewed": "7,600,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "13 Hours: The Secret Soldiers of Benghazi",
+    "ranking": "08",
+    "weeks_in_top10": "4",
+    "hours_viewed": "11,800,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Minions: The Rise of Gru",
+    "ranking": "09",
+    "weeks_in_top10": "11",
+    "hours_viewed": "6,100,000"
+  },
+  {
+    "week": "2024-12-01",
+    "title": "Buy Now: The Shopping Conspiracy",
+    "ranking": "10",
+    "weeks_in_top10": "2",
+    "hours_viewed": "5,700,000"
+  }
+]
