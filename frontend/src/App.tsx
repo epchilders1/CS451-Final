@@ -14,7 +14,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/CS451-Final" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </>
