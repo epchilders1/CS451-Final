@@ -1,7 +1,8 @@
 import MagicBento from "../components/MagicBento";
 import PixelBlast from "../components/PixelBlast";
-import React from "react";
+import React, { use } from "react";
 import { useEffect, useState } from "react";
+import Loading from "../components/Loading";
 
 export default function HomePage() {
     const [predictionData, setPredictionData] = useState(null);
@@ -10,20 +11,18 @@ export default function HomePage() {
 
         try {
             const response = await fetch(
-            'https://7dl05fuc73.execute-api.us-east-2.amazonaws.com/default/netflix-engagement-predictor',
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({})
-            }
-            );
+                "https://7dl05fuc73.execute-api.us-east-2.amazonaws.com/default/netflix-engagement-predictor",
+                {
+                    method: "GET"
+                }
+                );
+
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setPredictionData(data);
-            console.log('Fetched summary data:', data);
+            setPredictionData(JSON.parse(data.body));
         }
         catch (error) {
             console.error('Error fetching summary:', error);
@@ -33,6 +32,17 @@ export default function HomePage() {
     useEffect(() => {
         summaryAPICall();
     }, []);
+
+    useEffect(() => {
+        if (predictionData) {
+            console.log("Prediction Data:", predictionData);
+        }
+    }, [predictionData]);
+
+    if(!predictionData) {
+        return <Loading />;
+    }
+    else{
     return(
         <div style={{ 
             width: '100vw', 
@@ -54,17 +64,17 @@ export default function HomePage() {
                     pixelSize={6}
                     color="#B19EEF"
                     patternScale={3}
-                    patternDensity={1.2}
+                    patternDensity={1.4}
                     pixelSizeJitter={0.5}
                     enableRipples
-                    rippleSpeed={0.4}
+                    rippleSpeed={0.6}
                     rippleThickness={0.12}
                     rippleIntensityScale={1.5}
                     liquid
                     liquidStrength={0.12}
                     liquidRadius={1.2}
                     liquidWobbleSpeed={5}
-                    speed={0.6}
+                    speed={1.5}
                     edgeFade={0.25}
                     transparent
                 />
@@ -94,4 +104,5 @@ export default function HomePage() {
             </div>
         </div>
     );
+    }
 }

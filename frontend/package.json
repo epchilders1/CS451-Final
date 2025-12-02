@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "gsap": "^3.13.0",
+    "ldrs": "^1.1.9",
     "postprocessing": "^6.38.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
