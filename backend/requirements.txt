@@ -25,3 +25,4 @@ threadpoolctl==3.6.0
 tzdata==2025.2
 Werkzeug==3.1.4
 python-dotenv==1.0.1
+selenium==4.39.0
