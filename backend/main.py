@@ -316,7 +316,7 @@ class RottenTomatoesSentimentCollector:
                 logger.warning(f"No review cards found for {movie_slug} after timeout")
                 return []
             
-            time.sleep(0.1)
+            time.sleep(1)
             
             if debug:
                 screenshot_path = self.cache_dir / f"screenshot_{movie_slug}.png"
