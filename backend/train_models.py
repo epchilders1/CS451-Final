@@ -69,14 +69,12 @@ class NetflixEngagementPredictor:
         logger.info("Preparing features...")
         
         feature_cols = [
-            # Current week engagement
             'hours_viewed_sum',
             'hours_viewed_mean',
             'hours_viewed_std',
             'weeks_in_top10_mean',
             'ranking_nunique',
             
-            # Current week sentiment
             'avg_rating_mean',
             'rating_std_mean',
             'vader_compound_mean_mean',
@@ -85,7 +83,6 @@ class NetflixEngagementPredictor:
             'textblob_polarity_mean_mean',
             'num_reviews_with_text_sum',
             
-            # Lagged features
             'hours_lag_1',
             'hours_lag_2',
             'hours_lag_3',
@@ -95,11 +92,9 @@ class NetflixEngagementPredictor:
             'sentiment_lag_3',
             'sentiment_lag_4',
             
-            # Rolling averages
             'hours_ma_4week',
             'sentiment_ma_4week',
             
-            # Time features
             'month',
             'week_of_year'
         ]
@@ -124,12 +119,10 @@ class NetflixEngagementPredictor:
         logger.info("TRAINING BASELINE MODELS")
         logger.info("=" * 70)
         
-        # Time series cross-validation (respecting temporal order)
         tscv = TimeSeriesSplit(n_splits=5)
         
         results = {}
         
-        # 1. Naive Baseline (always predict no decline)
         naive_pred = np.zeros(len(y))
         naive_acc = (naive_pred == y).mean()
         results['naive'] = {
@@ -138,7 +131,6 @@ class NetflixEngagementPredictor:
         }
         logger.info(f"\n1. Naive Baseline Accuracy: {naive_acc:.3f}")
         
-        # 2. Logistic Regression (for interpretability)
         logger.info("\n2. Training Logistic Regression...")
         lr = LogisticRegression(random_state=42, max_iter=1000, class_weight='balanced')
         lr_scores = cross_val_score(lr, X, y, cv=tscv, scoring='roc_auc')
@@ -155,7 +147,6 @@ class NetflixEngagementPredictor:
         
         logger.info(f"   AUC-ROC: {lr_scores.mean():.3f} (+/- {lr_scores.std():.3f})")
         
-        # Get top features
         feature_importance = pd.DataFrame({
             'feature': feature_names,
             'coefficient': np.abs(lr.coef_[0])
@@ -165,7 +156,6 @@ class NetflixEngagementPredictor:
         for idx, row in feature_importance.head(5).iterrows():
             logger.info(f"     {row['feature']}: {row['coefficient']:.3f}")
         
-        # 3. Random Forest
         logger.info("\n3. Training Random Forest...")
         rf = RandomForestClassifier(
             n_estimators=100,
@@ -187,7 +177,6 @@ class NetflixEngagementPredictor:
         self.models['random_forest'] = rf
         logger.info(f"   AUC-ROC: {rf_scores.mean():.3f} (+/- {rf_scores.std():.3f})")
         
-        # 4. XGBoost (your main model per proposal)
         logger.info("\n4. Training XGBoost...")
         xgb_model = xgb.XGBClassifier(
             n_estimators=100,
@@ -210,7 +199,6 @@ class NetflixEngagementPredictor:
         self.models['xgboost'] = xgb_model
         logger.info(f"   AUC-ROC: {xgb_scores.mean():.3f} (+/- {xgb_scores.std():.3f})")
         
-        # Store feature importance
         self.feature_importance['xgboost'] = pd.DataFrame({
             'feature': feature_names,
             'importance': xgb_model.feature_importances_
@@ -220,7 +208,6 @@ class NetflixEngagementPredictor:
         for idx, row in self.feature_importance['xgboost'].head(5).iterrows():
             logger.info(f"     {row['feature']}: {row['importance']:.3f}")
         
-        # 5. LightGBM (alternative gradient boosting)
         logger.info("\n5. Training LightGBM...")
         lgb_model = lgb.LGBMClassifier(
             n_estimators=100,
@@ -252,7 +239,6 @@ class NetflixEngagementPredictor:
         logger.info(f"EVALUATING ON TEST SET (Last {test_size} weeks)")
         logger.info("=" * 70)
         
-        # Split data (time-based)
         X_train, X_test = X.iloc[:-test_size], X.iloc[-test_size:]
         y_train, y_test = y.iloc[:-test_size], y.iloc[-test_size:]
         
@@ -266,11 +252,9 @@ class NetflixEngagementPredictor:
             logger.info(f"\n{model_name.upper()}:")
             model_clone = clone(model)
             model_clone.fit(X_train, y_train)
-            # Make predictions
             y_pred = model.predict(X_test)
             y_pred_proba = model.predict_proba(X_test)[:, 1]
             
-            # Calculate metrics
             auc = roc_auc_score(y_test, y_pred_proba)
             
             logger.info(f"  AUC-ROC: {auc:.3f}")
@@ -288,10 +272,8 @@ class NetflixEngagementPredictor:
     def predict_next_week(self, current_week_features: Dict) -> Dict:
         """Predict engagement decline risk for next week"""
         
-        # Convert to DataFrame
         features_df = pd.DataFrame([current_week_features])
         
-        # Get predictions from all models
         predictions = {}
         
         for model_name, model in self.models.items():
@@ -304,7 +286,6 @@ class NetflixEngagementPredictor:
                 'risk_level': self._risk_level(pred_proba)
             }
         
-        # Ensemble prediction (average probabilities)
         avg_proba = np.mean([p['decline_probability'] for p in predictions.values()])
         
         result = {
@@ -333,17 +314,14 @@ class NetflixEngagementPredictor:
         logger.info("GENERATING BUSINESS INSIGHTS")
         logger.info("=" * 70)
         
-        # Use XGBoost as primary model
         model = self.models['xgboost']
         
-        # Feature importance
         top_features = self.feature_importance['xgboost'].head(10)
         
         logger.info("\nTop 10 Most Important Features:")
         for idx, row in top_features.iterrows():
             logger.info(f"  {row['feature']}: {row['importance']:.3f}")
         
-        # Correlation analysis
         engagement_cols = ['hours_viewed_sum', 'hours_pct_change', 'engagement_decline']
         sentiment_cols = ['avg_rating_mean', 'vader_compound_mean_mean', 
                          'textblob_polarity_mean_mean']
@@ -369,7 +347,6 @@ class NetflixEngagementPredictor:
         """Generate human-readable key findings"""
         findings = []
         
-        # Check if sentiment features are important
         sentiment_features = top_features[
             top_features['feature'].str.contains('rating|vader|textblob', case=False)
         ]
@@ -380,14 +357,12 @@ class NetflixEngagementPredictor:
                 f"predictors of engagement decline"
             )
         
-        # Check if lagged hours are important
         lag_features = top_features[top_features['feature'].str.contains('lag', case=False)]
         if len(lag_features) > 0:
             findings.append(
                 f"Historical engagement patterns (lagged features) are strong predictors"
             )
         
-        # Sentiment correlation
         if 'vader_compound_mean_mean' in X.columns:
             corr = X['vader_compound_mean_mean'].corr(y)
             if abs(corr) > 0.3:
@@ -409,9 +384,7 @@ class NetflixEngagementPredictor:
             joblib.dump(model, model_path)
             logger.info(f"✓ Saved {model_name} to {model_path}")
         
-        # Save feature importance
         importance_path = self.model_dir / "feature_importance.json"
-        # Ensure all DataFrame importance objects are converted to a list of dicts for JSON
         serializable_importance = {
             k: v.to_dict('records') for k, v in self.feature_importance.items()
         }
@@ -430,52 +403,40 @@ def main():
         model_dir="./models"
     )
     
-    # Step 1: Load data
     df, top_10 = predictor.load_data()
     
-    # Step 2: Prepare features
     X, y, feature_names = predictor.prepare_features(df)
     test_size = min(25, len(X) // 5)
 
     X_train, X_test = X.iloc[:-test_size], X.iloc[-test_size:]
     y_train, y_test = y.iloc[:-test_size], y.iloc[-test_size:]
-    # Step 3: Train models
-    # This dictionary (training_results) contains unserializable model objects
     training_results = predictor.train_baseline_models(X, y, feature_names)
     
-    # Step 4: Evaluate on test set
     test_results = predictor.evaluate_on_test_set(X, y, test_size=test_size)
     
-    # Step 5: Generate insights
     insights = predictor.generate_insights(X, y)
     
-    # Step 6: Save models and feature importance files
     predictor.save_models()
     
-    # Step 7: Generate and Save Final API Payload (Prediction JSON)
     logger.info("\n" + "=" * 70)
     logger.info("GENERATING AND SAVING API PAYLOAD")
     logger.info("=" * 70)
     
-    # Use last week's features for the prediction context
     last_week_features = X.iloc[-1].to_dict()
     prediction = predictor.predict_next_week(last_week_features)
     
-    # --- Prepare serializable data from training_results ---
     serializable_training_results = {}
     for model_name, res in training_results.items():
-        if model_name != 'naive': # Don't save the model objects or CV scores list
+        if model_name != 'naive':
             serializable_training_results[model_name] = {
                 'cv_auc_mean': float(res.get('cv_auc_mean', 'N/A')),
                 'cv_auc_std': float(res.get('cv_auc_std', 'N/A')),
             }
     
-    # --- Prepare feature importance (already saved, but structure needed for payload) ---
     serializable_feature_importance = {
         k: v.to_dict('records') for k, v in predictor.feature_importance.items()
     }
     
-    # --- Context Data ---
     latest_features_context = {
         'date': X.index[-1].strftime('%Y-%m-%d') if isinstance(X.index, pd.DatetimeIndex) else 'N/A',
         'hours_viewed_sum': float(last_week_features.get('hours_viewed_sum', 0)),
@@ -496,13 +457,11 @@ def main():
         'recent_top_10_movies': top_10_serializable.to_dict('records')
     }
 
-    # --- FIX: Access model_dir via the predictor object ---
     output_path = predictor.model_dir / "latest_prediction.json"
     with open(output_path, 'w') as f:
         json.dump(api_payload, f, indent=2)
     logger.info(f"✓ Saved final API payload to: {output_path}")
 
-    # --- Final Console Summary ---
     print("\n" + "=" * 70)
     print("MODEL TRAINING COMPLETE")
     print("=" * 70)
