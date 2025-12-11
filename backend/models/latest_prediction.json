@@ -1,8 +1,8 @@
 {
   "status": "success",
-  "prediction_date": "2025-12-02",
+  "prediction_date": "2025-12-11",
   "ensemble_prediction": {
-    "decline_probability": 0.22602170476990152,
+    "decline_probability": 0.21522385300427285,
     "prediction": "NO DECLINE",
     "risk_level": "LOW"
   },
@@ -10,195 +10,195 @@
     "xgboost": [
       {
         "feature": "hours_viewed_sum",
-        "importance": 0.06907428801059723
-      },
-      {
-        "feature": "weeks_in_top10_mean",
-        "importance": 0.06787760555744171
-      },
-      {
-        "feature": "hours_lag_1",
-        "importance": 0.0625801831483841
-      },
-      {
-        "feature": "hours_viewed_std",
-        "importance": 0.060773734003305435
-      },
-      {
-        "feature": "month",
-        "importance": 0.058807965368032455
+        "importance": 0.07790594547986984
       },
       {
         "feature": "sentiment_lag_1",
-        "importance": 0.057308439165353775
+        "importance": 0.06723662465810776
       },
       {
-        "feature": "week_of_year",
-        "importance": 0.05023052170872688
+        "feature": "weeks_in_top10_mean",
+        "importance": 0.06638526171445847
+      },
+      {
+        "feature": "hours_lag_1",
+        "importance": 0.06423642486333847
+      },
+      {
+        "feature": "hours_viewed_std",
+        "importance": 0.06408990174531937
       },
       {
         "feature": "vader_negative_mean_mean",
-        "importance": 0.0502004474401474
-      },
-      {
-        "feature": "num_reviews_with_text_sum",
-        "importance": 0.04440999776124954
-      },
-      {
-        "feature": "vader_compound_mean_mean",
-        "importance": 0.04417734593153
+        "importance": 0.050486888736486435
       },
       {
         "feature": "sentiment_lag_4",
-        "importance": 0.04349246248602867
+        "importance": 0.04776105284690857
       },
       {
-        "feature": "vader_positive_mean_mean",
-        "importance": 0.042910583317279816
-      },
-      {
-        "feature": "rating_std_mean",
-        "importance": 0.04064565896987915
-      },
-      {
-        "feature": "sentiment_lag_2",
-        "importance": 0.03968023136258125
-      },
-      {
-        "feature": "hours_ma_4week",
-        "importance": 0.03966395929455757
+        "feature": "month",
+        "importance": 0.04525577276945114
       },
       {
         "feature": "hours_lag_4",
-        "importance": 0.0386471189558506
+        "importance": 0.04376114904880524
       },
       {
         "feature": "sentiment_ma_4week",
-        "importance": 0.03843091055750847
+        "importance": 0.0422346405684948
       },
       {
-        "feature": "hours_lag_2",
-        "importance": 0.037205714732408524
+        "feature": "week_of_year",
+        "importance": 0.040421560406684875
       },
       {
-        "feature": "avg_rating_mean",
-        "importance": 0.03385990113019943
-      },
-      {
-        "feature": "hours_lag_3",
-        "importance": 0.03118165209889412
+        "feature": "vader_compound_mean_mean",
+        "importance": 0.03976137936115265
       },
       {
         "feature": "sentiment_lag_3",
-        "importance": 0.029706452041864395
+        "importance": 0.03864221274852753
+      },
+      {
+        "feature": "sentiment_lag_2",
+        "importance": 0.03803952783346176
+      },
+      {
+        "feature": "rating_std_mean",
+        "importance": 0.03800743445754051
+      },
+      {
+        "feature": "hours_ma_4week",
+        "importance": 0.03791501373052597
+      },
+      {
+        "feature": "hours_lag_3",
+        "importance": 0.03714638203382492
+      },
+      {
+        "feature": "hours_lag_2",
+        "importance": 0.035130858421325684
+      },
+      {
+        "feature": "avg_rating_mean",
+        "importance": 0.03393172845244408
+      },
+      {
+        "feature": "num_reviews_with_text_sum",
+        "importance": 0.03272027522325516
       },
       {
         "feature": "textblob_polarity_mean_mean",
-        "importance": 0.01913481578230858
+        "importance": 0.029672693461179733
       },
       {
-        "feature": "ranking_nunique",
-        "importance": 0.0
+        "feature": "vader_positive_mean_mean",
+        "importance": 0.02925729751586914
       },
       {
         "feature": "hours_viewed_mean",
+        "importance": 0.0
+      },
+      {
+        "feature": "ranking_nunique",
         "importance": 0.0
       }
     ]
   },
   "latest_data_context": {
     "date": "N/A",
-    "hours_viewed_sum": 181700000.0,
-    "sentiment_lag_2": 0.2993015
+    "hours_viewed_sum": 114500000.0,
+    "sentiment_lag_2": 0.3566445
   },
   "model_performance_summary": {
     "logistic_regression": {
-      "cv_auc_mean": 0.6207919580419581,
-      "cv_auc_std": 0.036498167480367
+      "cv_auc_mean": 0.6325157342657343,
+      "cv_auc_std": 0.054126289591313256
     },
     "random_forest": {
-      "cv_auc_mean": 0.6313734182484183,
-      "cv_auc_std": 0.11572680243685228
+      "cv_auc_mean": 0.6658121878121879,
+      "cv_auc_std": 0.09378188804978757
     },
     "xgboost": {
-      "cv_auc_mean": 0.6292572427572428,
-      "cv_auc_std": 0.06571814360454759
+      "cv_auc_mean": 0.6174712787212787,
+      "cv_auc_std": 0.03844893515041712
     },
     "lightgbm": {
-      "cv_auc_mean": 0.6595527805527805,
-      "cv_auc_std": 0.08862601769147552
+      "cv_auc_mean": 0.6271217948717949,
+      "cv_auc_std": 0.04982616768735054
     }
   },
   "recent_top_10_movies": [
     {
-      "week": "2025-11-23",
-      "title": "Champagne Problems",
+      "week": "2025-12-07",
+      "title": "My Secret Santa",
       "ranking": 1,
       "weeks_in_top10": 1,
-      "hours_viewed": 33800000
+      "hours_viewed": 27800000
     },
     {
-      "week": "2025-11-23",
-      "title": "In Your Dreams",
+      "week": "2025-12-07",
+      "title": "Jingle Bell Heist",
       "ranking": 2,
       "weeks_in_top10": 2,
-      "hours_viewed": 25200000
+      "hours_viewed": 16600000
     },
     {
-      "week": "2025-11-23",
-      "title": "Frankenstein",
-      "ranking": 3,
-      "weeks_in_top10": 3,
-      "hours_viewed": 37000000
-    },
-    {
-      "week": "2025-11-23",
-      "title": "The Carman Family Deaths",
-      "ranking": 4,
-      "weeks_in_top10": 1,
-      "hours_viewed": 15400000
-    },
-    {
-      "week": "2025-11-23",
+      "week": "2025-12-07",
       "title": "KPop Demon Hunters",
+      "ranking": 3,
+      "weeks_in_top10": 25,
+      "hours_viewed": 14400000
+    },
+    {
+      "week": "2025-12-07",
+      "title": "Champagne Problems",
+      "ranking": 4,
+      "weeks_in_top10": 3,
+      "hours_viewed": 8600000
+    },
+    {
+      "week": "2025-12-07",
+      "title": "Jay Kelly",
       "ranking": 5,
-      "weeks_in_top10": 23,
-      "hours_viewed": 16900000
+      "weeks_in_top10": 1,
+      "hours_viewed": 11300000
     },
     {
-      "week": "2025-11-23",
-      "title": "A Merry Little Ex-Mas",
+      "week": "2025-12-07",
+      "title": "In Your Dreams",
       "ranking": 6,
-      "weeks_in_top10": 2,
-      "hours_viewed": 13700000
+      "weeks_in_top10": 4,
+      "hours_viewed": 7300000
     },
     {
-      "week": "2025-11-23",
-      "title": "Train Dreams",
+      "week": "2025-12-07",
+      "title": "Rio",
       "ranking": 7,
       "weeks_in_top10": 1,
-      "hours_viewed": 10700000
+      "hours_viewed": 6200000
     },
     {
-      "week": "2025-11-23",
-      "title": "Selena y Los Dinos: A Family\u2019s Legacy",
+      "week": "2025-12-07",
+      "title": "The Call of the Wild",
       "ranking": 8,
       "weeks_in_top10": 1,
-      "hours_viewed": 9300000
+      "hours_viewed": 6400000
     },
     {
-      "week": "2025-11-23",
-      "title": "The Little Things",
+      "week": "2025-12-07",
+      "title": "Frankenstein",
       "ranking": 9,
-      "weeks_in_top10": 4,
-      "hours_viewed": 10100000
+      "weeks_in_top10": 5,
+      "hours_viewed": 9400000
     },
     {
-      "week": "2025-11-23",
-      "title": "A Man Called Otto",
+      "week": "2025-12-07",
+      "title": "Ferdinand",
       "ranking": 10,
-      "weeks_in_top10": 5,
-      "hours_viewed": 9600000
+      "weeks_in_top10": 3,
+      "hours_viewed": 6500000
     }
   ]
 }

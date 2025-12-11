@@ -12,7 +12,12 @@ from typing import List, Dict, Optional
 from collections import Counter
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -214,6 +219,7 @@ class RottenTomatoesSentimentCollector:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.session = self._create_session()
         self.vader = SentimentIntensityAnalyzer()
+        self.driver = None
 
     def _create_session(self) -> requests.Session:
         """Create session with retry logic"""
@@ -230,6 +236,27 @@ class RottenTomatoesSentimentCollector:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
         return session
+
+    def _init_driver(self):
+        """Initialize Selenium WebDriver with options"""
+        if self.driver is None:
+            chrome_options = Options()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('--window-size=1920,1080')
+            chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+            
+            self.driver = webdriver.Chrome(options=chrome_options)
+            logger.info("Selenium WebDriver initialized")
+
+    def _close_driver(self):
+        """Close Selenium WebDriver"""
+        if self.driver:
+            self.driver.quit()
+            self.driver = None
+            logger.info("Selenium WebDriver closed")
 
     def search_movie(self, title: str) -> Optional[str]:
         """Search for movie on Rotten Tomatoes"""
@@ -261,11 +288,12 @@ class RottenTomatoesSentimentCollector:
             logger.error(f"❌ Error searching for '{title}': {e}")
             return None
 
-    def scrape_reviews(self, movie_url: str) -> List[Dict]:
-        """Scrape user reviews from Rotten Tomatoes"""
+    def scrape_reviews(self, movie_url: str, debug: bool = False) -> List[Dict]:
+        """Scrape reviews using Selenium for dynamic content"""
         movie_slug = movie_url.split('/')[-1] or movie_url.split('/')[-2]
         base_review_url = f"{movie_url}/reviews?type=user"
         cache_file = self.cache_dir / f"reviews_{movie_slug}.json"
+        logger.info(f"Scraping: {base_review_url}")
         
         # Check cache
         if cache_file.exists():
@@ -276,39 +304,114 @@ class RottenTomatoesSentimentCollector:
         all_reviews = []
         
         try:
-            response = self.session.get(base_review_url, timeout=10)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'html.parser')
+            self._init_driver()
             
-            reviews = soup.find_all('div', class_='audience-review-row', 
-                                   attrs={'data-qa': 'review-item'})
+            self.driver.get(base_review_url)
             
-            for review in reviews:
+            wait = WebDriverWait(self.driver, 15)
+            try:
+                wait.until(EC.presence_of_element_located((By.TAG_NAME, "review-card")))
+                logger.info(f"Review cards loaded for {movie_slug}")
+            except TimeoutException:
+                logger.warning(f"No review cards found for {movie_slug} after timeout")
+                return []
+            
+            time.sleep(0.1)
+            
+            if debug:
+                screenshot_path = self.cache_dir / f"screenshot_{movie_slug}.png"
+                html_path = self.cache_dir / f"page_source_{movie_slug}.html"
+                self.driver.save_screenshot(str(screenshot_path))
+                with open(html_path, 'w', encoding='utf-8') as f:
+                    f.write(self.driver.page_source)
+                logger.info(f"Debug files saved: {screenshot_path} and {html_path}")
+            
+            reviews = self.driver.find_elements(By.TAG_NAME, 'review-card')
+            logger.info(f"Found {len(reviews)} review cards")
+            
+            if reviews and len(reviews) > 0:
+                try:
+                    first_review_html = reviews[0].get_attribute('outerHTML')
+                    logger.debug(f"First review HTML sample (first 500 chars): {first_review_html[:500]}")
+                except Exception as e:
+                    logger.debug(f"Could not get HTML sample: {e}")
+            
+            for idx, review in enumerate(reviews):
                 review_text = ""
                 date = None
                 rating = None
                 name = None
                 
                 try:
-                    rating_el = review.select_one('rating-stars-group')
-                    if rating_el:
-                        try:
-                            rating = float(rating_el.get('score', 0))
-                        except (ValueError, TypeError, AttributeError):
-                            rating = None
+                    try:
+                        rating_span = review.find_element(By.CSS_SELECTOR, 'span[slot="rating"]')
+                        rating_text = rating_span.text.strip()
+                        match = re.search(r'([\d.]+)/\d+', rating_text)
+                        if match:
+                            rating = float(match.group(1))
+                    except (NoSuchElementException, ValueError):
+                        rating = None
 
-                    text_el = review.find('p', class_="audience-reviews__review js-review-text",
-                                        attrs={'data-qa': 'review-text'})
-                    if text_el:
-                        review_text = text_el.text.strip()
+                    try:
+                        drawer = review.find_element(By.CSS_SELECTOR, 'drawer-more[slot="review"]')
+                        
+                        try:
+                            shadow_root = self.driver.execute_script('return arguments[0].shadowRoot', drawer)
+                            if shadow_root:
+                                review_text = self.driver.execute_script('''
+                                    const drawer = arguments[0];
+                                    const shadowRoot = drawer.shadowRoot;
+                                    if (shadowRoot) {
+                                        const content = shadowRoot.querySelector('span[slot="content"]') || 
+                                                       shadowRoot.querySelector('.review-text') ||
+                                                       shadowRoot.querySelector('p');
+                                        return content ? content.textContent.trim() : '';
+                                    }
+                                    return '';
+                                ''', drawer)
+                                
+                                if idx < 3:
+                                    logger.debug(f"Review {idx}: Extracted from shadow DOM, length: {len(review_text)}")
+                        except Exception as e:
+                            if idx < 3:
+                                logger.debug(f"Review {idx}: No shadow root or error accessing it: {e}")
+                        
+                        if not review_text:
+                            try:
+                                text_el = drawer.find_element(By.CSS_SELECTOR, 'span[slot="content"]')
+                                review_text = text_el.text.strip()
+                                
+                                if not review_text:
+                                    review_text = self.driver.execute_script('''
+                                        const span = arguments[0].querySelector('span[slot="content"]');
+                                        return span ? span.textContent.trim() : '';
+                                    ''', drawer)
+                                
+                                if idx < 3:
+                                    logger.debug(f"Review {idx}: Extracted normally, length: {len(review_text)}")
+                                    
+                            except NoSuchElementException:
+                                if idx < 3:
+                                    logger.debug(f"Review {idx}: Drawer found but no content span")
+                            
+                    except NoSuchElementException:
+                        if idx < 3:
+                            logger.debug(f"Review {idx}: No drawer-more element found")
+                        review_text = ""
                     
-                    date_el = review.find('span', class_='audience-reviews__duration',
-                                         attrs={'data-qa': 'review-duration'})
-                    if date_el:
-                        date = format_date_for_storage(date_el.text.strip())
+                    try:
+                        date_el = review.find_element(By.CSS_SELECTOR, 'span[slot="timestamp"]')
+                        date_text = date_el.text.strip()
+                        date_obj = datetime.strptime(date_text, "%m/%d/%Y")
+                        date = date_obj.strftime("%Y-%m-%d")
+                    except (NoSuchElementException, ValueError):
+                        date = None
                     
-                    user_el = review.select_one('span.reviewer-name')
-                    name = user_el.text.strip() if user_el else "Anonymous"
+                    try:
+                        user_el = review.find_element(By.CSS_SELECTOR, 'rt-link[slot="name"]')
+                        name = user_el.text.strip()
+                    except NoSuchElementException:
+                        name = "Anonymous"
 
                     if review_text:
                         all_reviews.append({
@@ -317,23 +420,23 @@ class RottenTomatoesSentimentCollector:
                             'text': review_text,
                             'date': date
                         })
+                        # print("Name: ", name, "Rating:", rating, "Rating Text:", review_text, "Date:", date)
                 
                 except Exception as e:
                     logger.debug(f"Error parsing individual review: {e}")
                     continue
             
             logger.info(f"Scraped {movie_slug}: {len(all_reviews)} reviews")
-            time.sleep(0.5)
-            
+        
         except Exception as e:
             logger.error(f"Error scraping {movie_slug}: {e}")
         
-        # Cache results
         if all_reviews:
             with open(cache_file, 'w') as f:
                 json.dump(all_reviews, f, indent=2)
         
         return all_reviews
+
 
     def analyze_sentiment(self, reviews: List[Dict]) -> Dict:
         """Analyze sentiment from reviews"""
@@ -404,6 +507,9 @@ class RottenTomatoesSentimentCollector:
             'num_reviews_with_text': 0
         }
 
+    def __del__(self):
+        """Cleanup: close driver when object is destroyed"""
+        self._close_driver()
 
 class NetflixEngagementPipeline:
     """Complete pipeline for Netflix engagement prediction"""
@@ -592,13 +698,16 @@ def main():
     """Main execution"""
     pipeline = NetflixEngagementPipeline(output_dir="./data")
     
+    # Get current date
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    
     # results = pipeline.run_full_pipeline(
     #     start_date="2024-01-01",
     #     end_date="2024-11-30"
     # )
     results = pipeline.run_full_pipeline(
         start_date="2021-07-04",
-        end_date="2025-11-23"
+        end_date=current_date
     )
     
     print("\n" + "=" * 70)

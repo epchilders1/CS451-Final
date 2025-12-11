@@ -2,98 +2,98 @@
   "xgboost": [
     {
       "feature": "hours_viewed_sum",
-      "importance": 0.06907428801059723
-    },
-    {
-      "feature": "weeks_in_top10_mean",
-      "importance": 0.06787760555744171
-    },
-    {
-      "feature": "hours_lag_1",
-      "importance": 0.0625801831483841
-    },
-    {
-      "feature": "hours_viewed_std",
-      "importance": 0.060773734003305435
-    },
-    {
-      "feature": "month",
-      "importance": 0.058807965368032455
+      "importance": 0.07790594547986984
     },
     {
       "feature": "sentiment_lag_1",
-      "importance": 0.057308439165353775
+      "importance": 0.06723662465810776
     },
     {
-      "feature": "week_of_year",
-      "importance": 0.05023052170872688
+      "feature": "weeks_in_top10_mean",
+      "importance": 0.06638526171445847
+    },
+    {
+      "feature": "hours_lag_1",
+      "importance": 0.06423642486333847
+    },
+    {
+      "feature": "hours_viewed_std",
+      "importance": 0.06408990174531937
     },
     {
       "feature": "vader_negative_mean_mean",
-      "importance": 0.0502004474401474
-    },
-    {
-      "feature": "num_reviews_with_text_sum",
-      "importance": 0.04440999776124954
-    },
-    {
-      "feature": "vader_compound_mean_mean",
-      "importance": 0.04417734593153
+      "importance": 0.050486888736486435
     },
     {
       "feature": "sentiment_lag_4",
-      "importance": 0.04349246248602867
+      "importance": 0.04776105284690857
     },
     {
-      "feature": "vader_positive_mean_mean",
-      "importance": 0.042910583317279816
-    },
-    {
-      "feature": "rating_std_mean",
-      "importance": 0.04064565896987915
-    },
-    {
-      "feature": "sentiment_lag_2",
-      "importance": 0.03968023136258125
-    },
-    {
-      "feature": "hours_ma_4week",
-      "importance": 0.03966395929455757
+      "feature": "month",
+      "importance": 0.04525577276945114
     },
     {
       "feature": "hours_lag_4",
-      "importance": 0.0386471189558506
+      "importance": 0.04376114904880524
     },
     {
       "feature": "sentiment_ma_4week",
-      "importance": 0.03843091055750847
+      "importance": 0.0422346405684948
     },
     {
-      "feature": "hours_lag_2",
-      "importance": 0.037205714732408524
+      "feature": "week_of_year",
+      "importance": 0.040421560406684875
     },
     {
-      "feature": "avg_rating_mean",
-      "importance": 0.03385990113019943
-    },
-    {
-      "feature": "hours_lag_3",
-      "importance": 0.03118165209889412
+      "feature": "vader_compound_mean_mean",
+      "importance": 0.03976137936115265
     },
     {
       "feature": "sentiment_lag_3",
-      "importance": 0.029706452041864395
+      "importance": 0.03864221274852753
+    },
+    {
+      "feature": "sentiment_lag_2",
+      "importance": 0.03803952783346176
+    },
+    {
+      "feature": "rating_std_mean",
+      "importance": 0.03800743445754051
+    },
+    {
+      "feature": "hours_ma_4week",
+      "importance": 0.03791501373052597
+    },
+    {
+      "feature": "hours_lag_3",
+      "importance": 0.03714638203382492
+    },
+    {
+      "feature": "hours_lag_2",
+      "importance": 0.035130858421325684
+    },
+    {
+      "feature": "avg_rating_mean",
+      "importance": 0.03393172845244408
+    },
+    {
+      "feature": "num_reviews_with_text_sum",
+      "importance": 0.03272027522325516
     },
     {
       "feature": "textblob_polarity_mean_mean",
-      "importance": 0.01913481578230858
+      "importance": 0.029672693461179733
     },
     {
-      "feature": "ranking_nunique",
-      "importance": 0.0
+      "feature": "vader_positive_mean_mean",
+      "importance": 0.02925729751586914
     },
     {
       "feature": "hours_viewed_mean",
+      "importance": 0.0
+    },
+    {
+      "feature": "ranking_nunique",
       "importance": 0.0
     }
   ]
