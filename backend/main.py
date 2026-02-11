@@ -337,81 +337,104 @@ class RottenTomatoesSentimentCollector:
                     logger.debug(f"Could not get HTML sample: {e}")
             
             for idx, review in enumerate(reviews):
-                review_text = ""
-                date = None
-                rating = None
-                name = None
-                
                 try:
-                    try:
-                        rating_span = review.find_element(By.CSS_SELECTOR, 'span[slot="rating"]')
-                        rating_text = rating_span.text.strip()
+                    data = self.driver.execute_script('''
+                        const card = arguments[0];
+                        const result = {text: '', rating: null, date: null, name: 'Anonymous'};
+
+                        // Helper to get text from an element or its shadow root children
+                        function getText(el) {
+                            if (!el) return '';
+                            // Try shadow root first
+                            if (el.shadowRoot) {
+                                const t = el.shadowRoot.textContent.trim();
+                                if (t) return t;
+                            }
+                            return el.textContent.trim();
+                        }
+
+                        // Get shadow root of review-card if it exists
+                        const root = card.shadowRoot || card;
+
+                        // Extract review text - try multiple strategies
+                        // Strategy 1: slot="review" content
+                        let reviewEl = card.querySelector('[slot="review"]');
+                        if (reviewEl) {
+                            result.text = getText(reviewEl);
+                        }
+                        // Strategy 2: drawer-more element
+                        if (!result.text) {
+                            let drawer = root.querySelector('drawer-more');
+                            if (drawer) {
+                                result.text = getText(drawer);
+                            }
+                        }
+                        // Strategy 3: any p tag with review content
+                        if (!result.text) {
+                            let p = root.querySelector('p');
+                            if (p) result.text = getText(p);
+                        }
+                        // Strategy 4: just get all text content from the card
+                        if (!result.text) {
+                            result.text = card.textContent.trim();
+                        }
+
+                        // Extract rating
+                        let ratingEl = card.querySelector('[slot="rating"]');
+                        if (!ratingEl && card.shadowRoot) {
+                            ratingEl = card.shadowRoot.querySelector('[slot="rating"]');
+                        }
+                        if (ratingEl) {
+                            result.rating = ratingEl.textContent.trim();
+                        }
+
+                        // Extract date
+                        let dateEl = card.querySelector('[slot="timestamp"]');
+                        if (!dateEl && card.shadowRoot) {
+                            dateEl = card.shadowRoot.querySelector('[slot="timestamp"]');
+                        }
+                        if (!dateEl) {
+                            dateEl = card.querySelector('time, [datetime]');
+                        }
+                        if (dateEl) {
+                            result.date = dateEl.textContent.trim();
+                        }
+
+                        // Extract username
+                        let nameEl = card.querySelector('[slot="name"]');
+                        if (!nameEl && card.shadowRoot) {
+                            nameEl = card.shadowRoot.querySelector('[slot="name"]');
+                        }
+                        if (nameEl) {
+                            result.name = nameEl.textContent.trim();
+                        }
+
+                        return result;
+                    ''', review)
+
+                    review_text = data.get('text', '').strip()
+                    name = data.get('name', 'Anonymous')
+
+                    # Parse rating
+                    rating = None
+                    rating_text = data.get('rating')
+                    if rating_text:
                         match = re.search(r'([\d.]+)/\d+', rating_text)
                         if match:
                             rating = float(match.group(1))
-                    except (NoSuchElementException, ValueError):
-                        rating = None
 
-                    try:
-                        drawer = review.find_element(By.CSS_SELECTOR, 'drawer-more[slot="review"]')
-                        
+                    # Parse date
+                    date = None
+                    date_text = data.get('date')
+                    if date_text:
                         try:
-                            shadow_root = self.driver.execute_script('return arguments[0].shadowRoot', drawer)
-                            if shadow_root:
-                                review_text = self.driver.execute_script('''
-                                    const drawer = arguments[0];
-                                    const shadowRoot = drawer.shadowRoot;
-                                    if (shadowRoot) {
-                                        const content = shadowRoot.querySelector('span[slot="content"]') || 
-                                                       shadowRoot.querySelector('.review-text') ||
-                                                       shadowRoot.querySelector('p');
-                                        return content ? content.textContent.trim() : '';
-                                    }
-                                    return '';
-                                ''', drawer)
-                                
-                                if idx < 3:
-                                    logger.debug(f"Review {idx}: Extracted from shadow DOM, length: {len(review_text)}")
-                        except Exception as e:
-                            if idx < 3:
-                                logger.debug(f"Review {idx}: No shadow root or error accessing it: {e}")
-                        
-                        if not review_text:
-                            try:
-                                text_el = drawer.find_element(By.CSS_SELECTOR, 'span[slot="content"]')
-                                review_text = text_el.text.strip()
-                                
-                                if not review_text:
-                                    review_text = self.driver.execute_script('''
-                                        const span = arguments[0].querySelector('span[slot="content"]');
-                                        return span ? span.textContent.trim() : '';
-                                    ''', drawer)
-                                
-                                if idx < 3:
-                                    logger.debug(f"Review {idx}: Extracted normally, length: {len(review_text)}")
-                                    
-                            except NoSuchElementException:
-                                if idx < 3:
-                                    logger.debug(f"Review {idx}: Drawer found but no content span")
-                            
-                    except NoSuchElementException:
-                        if idx < 3:
-                            logger.debug(f"Review {idx}: No drawer-more element found")
-                        review_text = ""
-                    
-                    try:
-                        date_el = review.find_element(By.CSS_SELECTOR, 'span[slot="timestamp"]')
-                        date_text = date_el.text.strip()
-                        date_obj = datetime.strptime(date_text, "%m/%d/%Y")
-                        date = date_obj.strftime("%Y-%m-%d")
-                    except (NoSuchElementException, ValueError):
-                        date = None
-                    
-                    try:
-                        user_el = review.find_element(By.CSS_SELECTOR, 'rt-link[slot="name"]')
-                        name = user_el.text.strip()
-                    except NoSuchElementException:
-                        name = "Anonymous"
+                            date_obj = datetime.strptime(date_text.strip(), "%m/%d/%Y")
+                            date = date_obj.strftime("%Y-%m-%d")
+                        except ValueError:
+                            date = None
+
+                    if idx < 3:
+                        logger.debug(f"Review {idx}: text_len={len(review_text)}, rating={rating}, date={date}, name={name}")
 
                     if review_text:
                         all_reviews.append({
@@ -420,10 +443,9 @@ class RottenTomatoesSentimentCollector:
                             'text': review_text,
                             'date': date
                         })
-                        # print("Name: ", name, "Rating:", rating, "Rating Text:", review_text, "Date:", date)
-                
+
                 except Exception as e:
-                    logger.debug(f"Error parsing individual review: {e}")
+                    logger.debug(f"Error parsing individual review {idx}: {e}")
                     continue
             
             logger.info(f"Scraped {movie_slug}: {len(all_reviews)} reviews")
