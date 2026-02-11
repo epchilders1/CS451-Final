@@ -8,18 +8,16 @@ on:
   workflow_dispatch:
 
 env:
-  # Set the S3 bucket name here
-  S3_BUCKET_NAME: your-netflix-s3-bucket-name # <<< RENAME THIS!
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
 
 jobs:
   run_data_pipeline:
     runs-on: ubuntu-latest
 
-    # Define environment variables for AWS credentials using GitHub Secrets
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: us-east-1 # Change to your AWS region
+      AWS_REGION: us-east-2
 
     steps:
       - name: Checkout Repository
