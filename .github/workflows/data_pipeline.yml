@@ -64,7 +64,7 @@ jobs:
 
           # <<< CORRECTED PATH >>>: The train_models.py saves the file here.
           local_path = 'backend/models/latest_prediction.json'
-          s3_key_for_api = 'latest/latest_prediction.json'
+          s3_key_for_api = 'latest_prediction.json'
           bucket_name = os.environ['S3_BUCKET_NAME']
 
           print(f"Uploading {local_path} to s3://{bucket_name}/{s3_key_for_api}")
