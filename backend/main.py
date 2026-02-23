@@ -415,7 +415,6 @@ class RottenTomatoesSentimentCollector:
                     review_text = data.get('text', '').strip()
                     name = data.get('name', 'Anonymous')
 
-                    # Parse rating
                     rating = None
                     rating_text = data.get('rating')
                     if rating_text:
@@ -423,7 +422,6 @@ class RottenTomatoesSentimentCollector:
                         if match:
                             rating = float(match.group(1))
 
-                    # Parse date
                     date = None
                     date_text = data.get('date')
                     if date_text:

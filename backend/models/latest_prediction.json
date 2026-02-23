@@ -1,100 +1,100 @@
 {
   "status": "success",
-  "prediction_date": "2025-12-11",
+  "prediction_date": "2026-02-11",
   "ensemble_prediction": {
-    "decline_probability": 0.21522385300427285,
+    "decline_probability": 0.11617002160699279,
     "prediction": "NO DECLINE",
     "risk_level": "LOW"
   },
   "top_predictive_features": {
     "xgboost": [
       {
+        "feature": "hours_lag_1",
+        "importance": 0.0744151845574379
+      },
+      {
         "feature": "hours_viewed_sum",
-        "importance": 0.07790594547986984
+        "importance": 0.07282685488462448
       },
       {
         "feature": "sentiment_lag_1",
-        "importance": 0.06723662465810776
+        "importance": 0.05986674129962921
       },
       {
         "feature": "weeks_in_top10_mean",
-        "importance": 0.06638526171445847
-      },
-      {
-        "feature": "hours_lag_1",
-        "importance": 0.06423642486333847
-      },
-      {
-        "feature": "hours_viewed_std",
-        "importance": 0.06408990174531937
-      },
-      {
-        "feature": "vader_negative_mean_mean",
-        "importance": 0.050486888736486435
-      },
-      {
-        "feature": "sentiment_lag_4",
-        "importance": 0.04776105284690857
-      },
-      {
-        "feature": "month",
-        "importance": 0.04525577276945114
-      },
-      {
-        "feature": "hours_lag_4",
-        "importance": 0.04376114904880524
-      },
-      {
-        "feature": "sentiment_ma_4week",
-        "importance": 0.0422346405684948
-      },
-      {
-        "feature": "week_of_year",
-        "importance": 0.040421560406684875
-      },
-      {
-        "feature": "vader_compound_mean_mean",
-        "importance": 0.03976137936115265
-      },
-      {
-        "feature": "sentiment_lag_3",
-        "importance": 0.03864221274852753
-      },
-      {
-        "feature": "sentiment_lag_2",
-        "importance": 0.03803952783346176
-      },
-      {
-        "feature": "rating_std_mean",
-        "importance": 0.03800743445754051
-      },
-      {
-        "feature": "hours_ma_4week",
-        "importance": 0.03791501373052597
-      },
-      {
-        "feature": "hours_lag_3",
-        "importance": 0.03714638203382492
-      },
-      {
-        "feature": "hours_lag_2",
-        "importance": 0.035130858421325684
-      },
-      {
-        "feature": "avg_rating_mean",
-        "importance": 0.03393172845244408
+        "importance": 0.05934862047433853
       },
       {
         "feature": "num_reviews_with_text_sum",
-        "importance": 0.03272027522325516
+        "importance": 0.055774517357349396
+      },
+      {
+        "feature": "sentiment_ma_4week",
+        "importance": 0.05314241722226143
+      },
+      {
+        "feature": "vader_compound_mean_mean",
+        "importance": 0.05308723449707031
+      },
+      {
+        "feature": "vader_negative_mean_mean",
+        "importance": 0.04952015355229378
+      },
+      {
+        "feature": "avg_rating_mean",
+        "importance": 0.046997737139463425
+      },
+      {
+        "feature": "month",
+        "importance": 0.046421196311712265
+      },
+      {
+        "feature": "sentiment_lag_4",
+        "importance": 0.04556658864021301
+      },
+      {
+        "feature": "hours_viewed_std",
+        "importance": 0.043129730969667435
+      },
+      {
+        "feature": "hours_lag_2",
+        "importance": 0.041509512811899185
+      },
+      {
+        "feature": "hours_lag_3",
+        "importance": 0.040401641279459
+      },
+      {
+        "feature": "sentiment_lag_2",
+        "importance": 0.038479793816804886
+      },
+      {
+        "feature": "sentiment_lag_3",
+        "importance": 0.03666672855615616
       },
       {
         "feature": "textblob_polarity_mean_mean",
-        "importance": 0.029672693461179733
+        "importance": 0.03637751191854477
+      },
+      {
+        "feature": "hours_lag_4",
+        "importance": 0.03586721420288086
+      },
+      {
+        "feature": "rating_std_mean",
+        "importance": 0.03523711860179901
+      },
+      {
+        "feature": "hours_ma_4week",
+        "importance": 0.03371235728263855
       },
       {
         "feature": "vader_positive_mean_mean",
-        "importance": 0.02925729751586914
+        "importance": 0.025988008826971054
+      },
+      {
+        "feature": "week_of_year",
+        "importance": 0.015663189813494682
       },
       {
         "feature": "hours_viewed_mean",
@@ -108,97 +108,97 @@
   },
   "latest_data_context": {
     "date": "N/A",
-    "hours_viewed_sum": 114500000.0,
-    "sentiment_lag_2": 0.3566445
+    "hours_viewed_sum": 88900000.0,
+    "sentiment_lag_2": 0.3386825
   },
   "model_performance_summary": {
     "logistic_regression": {
-      "cv_auc_mean": 0.6325157342657343,
-      "cv_auc_std": 0.054126289591313256
+      "cv_auc_mean": 0.6228027930402931,
+      "cv_auc_std": 0.058843161942595264
     },
     "random_forest": {
-      "cv_auc_mean": 0.6658121878121879,
-      "cv_auc_std": 0.09378188804978757
+      "cv_auc_mean": 0.6401939102564103,
+      "cv_auc_std": 0.08736810348667337
     },
     "xgboost": {
-      "cv_auc_mean": 0.6174712787212787,
-      "cv_auc_std": 0.03844893515041712
+      "cv_auc_mean": 0.6213298534798535,
+      "cv_auc_std": 0.04924335275334448
     },
     "lightgbm": {
-      "cv_auc_mean": 0.6271217948717949,
-      "cv_auc_std": 0.04982616768735054
+      "cv_auc_mean": 0.6209810897435897,
+      "cv_auc_std": 0.06418164189859665
     }
   },
   "recent_top_10_movies": [
     {
-      "week": "2025-12-07",
-      "title": "My Secret Santa",
+      "week": "2026-02-08",
+      "title": "The Investigation of Lucy Letby",
       "ranking": 1,
       "weeks_in_top10": 1,
-      "hours_viewed": 27800000
+      "hours_viewed": 20500000
     },
     {
-      "week": "2025-12-07",
-      "title": "Jingle Bell Heist",
+      "week": "2026-02-08",
+      "title": "The Rip",
       "ranking": 2,
-      "weeks_in_top10": 2,
-      "hours_viewed": 16600000
+      "weeks_in_top10": 4,
+      "hours_viewed": 13900000
     },
     {
-      "week": "2025-12-07",
+      "week": "2026-02-08",
       "title": "KPop Demon Hunters",
       "ranking": 3,
-      "weeks_in_top10": 25,
-      "hours_viewed": 14400000
+      "weeks_in_top10": 34,
+      "hours_viewed": 10100000
     },
     {
-      "week": "2025-12-07",
-      "title": "Champagne Problems",
+      "week": "2026-02-08",
+      "title": "In the Land of Saints and Sinners",
       "ranking": 4,
-      "weeks_in_top10": 3,
-      "hours_viewed": 8600000
+      "weeks_in_top10": 2,
+      "hours_viewed": 8900000
     },
     {
-      "week": "2025-12-07",
-      "title": "Jay Kelly",
+      "week": "2026-02-08",
+      "title": "Sweet Home Alabama",
       "ranking": 5,
       "weeks_in_top10": 1,
-      "hours_viewed": 11300000
+      "hours_viewed": 8000000
     },
     {
-      "week": "2025-12-07",
-      "title": "In Your Dreams",
+      "week": "2026-02-08",
+      "title": "Overboard (2018)",
       "ranking": 6,
-      "weeks_in_top10": 4,
-      "hours_viewed": 7300000
+      "weeks_in_top10": 1,
+      "hours_viewed": 6500000
     },
     {
-      "week": "2025-12-07",
-      "title": "Rio",
+      "week": "2026-02-08",
+      "title": "Mike and Dave Need Wedding Dates",
       "ranking": 7,
       "weeks_in_top10": 1,
-      "hours_viewed": 6200000
+      "hours_viewed": 5300000
     },
     {
-      "week": "2025-12-07",
-      "title": "The Call of the Wild",
+      "week": "2026-02-08",
+      "title": "Night at the Museum",
       "ranking": 8,
       "weeks_in_top10": 1,
-      "hours_viewed": 6400000
+      "hours_viewed": 5800000
     },
     {
-      "week": "2025-12-07",
-      "title": "Frankenstein",
+      "week": "2026-02-08",
+      "title": "Copshop",
       "ranking": 9,
-      "weeks_in_top10": 5,
-      "hours_viewed": 9400000
+      "weeks_in_top10": 1,
+      "hours_viewed": 5600000
     },
     {
-      "week": "2025-12-07",
-      "title": "Ferdinand",
+      "week": "2026-02-08",
+      "title": "The Adventures of Sharkboy and Lavagirl",
       "ranking": 10,
-      "weeks_in_top10": 3,
-      "hours_viewed": 6500000
+      "weeks_in_top10": 1,
+      "hours_viewed": 4300000
     }
   ]
 }

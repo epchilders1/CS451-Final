@@ -39,10 +39,12 @@ jobs:
           mkdir -p backend/predictions # This directory is still created but not used for prediction output
 
       - name: Run Data Scraping and Feature Engineering (main.py)
-        run: python backend/main.py
+        run: python main.py
+        working-directory: backend
 
       - name: Run Model Training and Prediction (train_models.py)
-        run: python backend/train_models.py
+        run: python train_models.py
+        working-directory: backend
 
       - name: Upload Results to S3 (Including Prediction JSON)
         run: |

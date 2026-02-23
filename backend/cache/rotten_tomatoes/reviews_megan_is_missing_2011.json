@@ -1,0 +1,32 @@
+[
+  {
+    "user": "Emma Wolfe",
+    "rating": 7.0,
+    "text": "Although Megan is missing is not a perfect film it does have some special qualities that makes it stand out and I really enjoyed it.",
+    "date": "2021-05-18"
+  },
+  {
+    "user": "Monique Jones",
+    "rating": 1.0,
+    "text": "Internet-dangers horror relies heavily on torture, violence.",
+    "date": "2020-12-01"
+  },
+  {
+    "user": "Zoe Rose Smith",
+    "rating": 3.5,
+    "text": "Megan Is Missing is a distressing look at the realities behind vulnerability, the damaging effects of online grooming and the truth behind what happens to those unfortunate to become victims at the hands of pure evil.",
+    "date": "2019-09-14"
+  },
+  {
+    "user": "C.H. Newell",
+    "rating": 1.0,
+    "text": "A forgettable, rotten movie with an important message that I'll likely never ever watch again.",
+    "date": "2019-05-07"
+  },
+  {
+    "user": "Jeremy Heilman",
+    "rating": 61.0,
+    "text": "Megan Is Missing is entirely convinced of the terrors that lurk online and by the time it comes to its chilling conclusion most of its viewers will be as well.",
+    "date": "2011-07-12"
+  }
+]
